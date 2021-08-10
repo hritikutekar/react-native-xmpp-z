@@ -14,8 +14,8 @@ Pod::Spec.new do |s|
 
   s.requires_arc        = true
   s.platform            = :ios, '8.0'
-  
-  s.dependency 'React'
+
+  s.dependency 'React-Core'
   s.dependency 'XMPPFramework'
   s.preserve_paths      = 'package.json', 'index.js'
   s.source_files        = 'RNXMPP/XMPPFramework.h', 'RNXMPP/RNXMPPService.m', 'RNXMPP/RNXMPPService.h', 'RNXMPP/RNXMPPConstants.h', 'RNXMPP/RNXMPPConstants.m', 'RNXMPP/RNXMPP.h', 'RNXMPP/RNXMPP.m'

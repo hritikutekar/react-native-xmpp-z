@@ -529,7 +529,7 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [self.delegate onError:[NSError errorWithDomain:@"xmpp" code:1 userInfo:@{ NSLocalizedDescriptionKey: [error stringValue]}]];
+    [self.delegate onError:[NSError errorWithDomain:@"xmpp" code:1 userInfo:@{ NSLocalizedDescriptionKey: [error XMLString]}]];
 }
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error

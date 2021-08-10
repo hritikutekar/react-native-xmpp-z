@@ -43,7 +43,7 @@ RCT_EXPORT_MODULE();
     [self.bridge.eventDispatcher sendAppEventWithName:@"RNXMPPLoginError" body:[error localizedDescription]];
 }
 
--(id)contentOf:(XMPPElement *)element{
+-(id)contentOf:(XMPPElement *)element src:(BOOL) src{
     NSMutableDictionary *res = [NSMutableDictionary dictionary];
     if ([element respondsToSelector:@selector(attributesAsDictionary)]){
         res = [element attributesAsDictionary];
@@ -54,20 +54,26 @@ RCT_EXPORT_MODULE();
                 res[child.name] = [NSMutableArray arrayWithObjects:res[child.name], nil];
             }
             if (res[child.name]){
-                [res[child.name] addObject:[self contentOf:child]];
+                [res[child.name] addObject:[self contentOf:child src:NO]];
             } else {
                 if ([child.name isEqualToString:@"text"]){
                     if ([res count]){
-                        res[@"#text"] = [self contentOf:child];
+                        res[@"#text"] = [self contentOf:child src:NO];
                     } else {
-                        return [self contentOf:child];
+                        return [self contentOf:child src:NO];
                     }
                 } else {
-                    res[child.name] = [self contentOf:child];
+                    res[child.name] = [self contentOf:child src:NO];
                 }
             }
         }
     }
+    
+    if (src) {
+        //12255
+        res[@"src"]=[element XMLString];
+    }
+    
     if ([res count]){
         return res;
     } else {
@@ -76,7 +82,7 @@ RCT_EXPORT_MODULE();
 }
 
 -(void)onMessage:(XMPPMessage *)message {
-    NSDictionary *res = [self contentOf:message];
+    NSDictionary *res = [self contentOf:message  src:YES];
     [self.bridge.eventDispatcher sendAppEventWithName:@"RNXMPPMessage" body:res];
 
 }
@@ -86,12 +92,12 @@ RCT_EXPORT_MODULE();
 }
 
 -(void)onIQ:(XMPPIQ *)iq {
-    NSDictionary *res = [self contentOf:iq];
+    NSDictionary *res = [self contentOf:iq src:YES];
     [self.bridge.eventDispatcher sendAppEventWithName:@"RNXMPPIQ" body:res];
 }
 
 -(void)onPresence:(XMPPPresence *)presence {
-    NSDictionary *res = [self contentOf:presence];
+    NSDictionary *res = [self contentOf:presence  src:YES];
     [self.bridge.eventDispatcher sendAppEventWithName:@"RNXMPPPresence" body:res];
 }
 
